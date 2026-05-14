@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Instagram OAuth - Callback</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    .box { background: #1a1a1a; border-radius: 12px; padding: 40px; max-width: 600px; width: 90%; text-align: center; }
+    h2 { color: #e1306c; margin-bottom: 8px; }
+    .code-box { background: #2a2a2a; border: 2px solid #e1306c; border-radius: 8px; padding: 16px; margin: 20px 0; word-break: break-all; font-family: monospace; font-size: 13px; color: #fff; text-align: left; }
+    button { background: #e1306c; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 16px; cursor: pointer; margin-top: 8px; }
+    button:hover { background: #c1255a; }
+    .error { color: #ff6b6b; }
+    .ok { color: #69db7c; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Instagram OAuth</h2>
+    <div id="content"></div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const error = params.get('error');
+    const div = document.getElementById('content');
+    if (code) {
+      div.innerHTML = `
+        <p class="ok">Autorización completada. Copia este código y pégalo en la terminal:</p>
+        <div class="code-box" id="code">${code}</div>
+        <button onclick="navigator.clipboard.writeText('${code}').then(()=>this.textContent='Copiado!')">Copiar código</button>
+      `;
+    } else if (error) {
+      div.innerHTML = `<p class="error">Error: ${params.get('error_description') || error}</p>`;
+    } else {
+      div.innerHTML = `<p>No se recibió ningún código. Vuelve a intentar el flujo OAuth.</p>`;
+    }
+  </script>
+</body>
+</html>
